@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 const SocialLogin = () => {
     const { googleSign } = useAuth();
     const location = useLocation();
-    const redirectTo = location?.state?.from || '/';
+    const redirectTo = location?.state?.from || '/dashboard';
     const navigate = useNavigate();
     const handleGoogleSignIn = () => {
         googleSign()

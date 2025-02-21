@@ -1,16 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "../App";
-import About from "../About";
 import Main from "../layouts/Main";
 import Dashboard from "../pages/Dashboard";
+import Home from "../pages/Home";
+import PrivateRoute from "./PrivateRoute";
 const Router = createBrowserRouter([
   {
     path: "/",
     element: <Main />,
     children: [
-      { path: "/", element: <App /> },
-      { path: "/about", element: <About /> },
-      { path: "/dashboard", element: <Dashboard />}
+      { path: "/", element: <Home /> },
+      { path: "/dashboard", element: <PrivateRoute><Dashboard /></PrivateRoute>}
     ]
   },
 
