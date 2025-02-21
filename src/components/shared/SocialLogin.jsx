@@ -29,13 +29,11 @@ const SocialLogin = () => {
             });
     }
     return (
-        <div className="flex flex-col gap-2 max-w-[200px] mx-auto">
-            <button className="flex border rounded-md justify-between items-center px-2 py-1.5 text-base cursor-pointer hover:bg-gray-300 transition duration-300"
-                onClick={handleGoogleSignIn}>
-                <FcGoogle />
-                Continue with Google
-            </button >
-        </div>
+        <button className="flex gap-2 border w-fit rounded-md justify-between items-center px-2 py-1.5 text-base cursor-pointer hover:bg-gray-300 transition duration-300"
+            onClick={handleGoogleSignIn}>
+            <FcGoogle size={20} />Continue with Google
+        </button >
+
     );
 };
 
