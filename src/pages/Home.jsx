@@ -1,9 +1,13 @@
 import React from 'react';
 import SocialLogin from '../components/shared/SocialLogin';
+import { Helmet } from 'react-helmet-async';
 
 const Home = () => {
     return (
         <div className='text-center h-screen flex flex-col justify-center items-center gap-3'>
+            <Helmet>
+                <title>Task Track | Home</title>
+            </Helmet>
             <h1 className='text-3xl md:text-5xl font-bold'>Welcome to Task Track!</h1>
             <div>
                 <p>Please log in to access your tasks.</p>

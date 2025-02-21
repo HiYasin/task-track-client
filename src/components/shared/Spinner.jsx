@@ -4,8 +4,8 @@ const Spinner = () => {
             <div className="spinner">
                 <style jsx>{`
                     .spinner {
-                        border: 10px solid #f3f3f3;
-                        border-top: 10px solid black;
+                        border: 7px solid #f3f3f3;
+                        border-top: 7px solid black;
                         border-radius: 50%;
                         width: 60px;
                         height: 60px;
