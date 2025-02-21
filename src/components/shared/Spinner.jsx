@@ -1,16 +1,14 @@
-import React from 'react';
-
 const Spinner = () => {
     return (
-        <div>
+        <div className='flex justify-center items-center h-screen w-screen'>
             <div className="spinner">
                 <style jsx>{`
                     .spinner {
-                        border: 16px solid #f3f3f3;
-                        border-top: 16px solid #3498db;
+                        border: 10px solid #f3f3f3;
+                        border-top: 10px solid black;
                         border-radius: 50%;
-                        width: 120px;
-                        height: 120px;
+                        width: 60px;
+                        height: 60px;
                         animation: spin 2s linear infinite;
                     }
 

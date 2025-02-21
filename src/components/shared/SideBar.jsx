@@ -1,19 +1,17 @@
-import { HiMenuAlt3 } from "react-icons/hi";
+
 import { MdOutlineDashboard } from "react-icons/md";
-import { RiSettings4Line } from "react-icons/ri";
-import { TbReportAnalytics } from "react-icons/tb";
-import { AiOutlineUser, AiOutlineHeart } from "react-icons/ai";
-import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
+import { AiOutlineUser } from "react-icons/ai";
+import { FiFolder } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import React from "react";
-import { FaBarsStaggered, FaX, FaXmark } from "react-icons/fa6";
+import { FaBarsStaggered, FaXmark } from "react-icons/fa6";
 import SignOut from "./SignOut";
 
 const SideBar = ({open, setOpen}) => {
     const menus = [
-        { name: "Dashboard", link: "/", icon: MdOutlineDashboard },
-        { name: "Profile", link: "/", icon: AiOutlineUser },
-        { name: "Work Space", link: "/", icon: FiFolder }
+        { name: "Dashboard", link: "/dashboard", icon: MdOutlineDashboard },
+        { name: "Profile", link: "/dashboard/profile", icon: AiOutlineUser },
+        { name: "Workspace", link: "/dashboard/workspace", icon: FiFolder }
     ];
     
     return (
