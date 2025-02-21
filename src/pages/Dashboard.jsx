@@ -2,6 +2,7 @@ import { useState } from "react";
 import SideBar from "../components/shared/SideBar";
 import { FaBarsStaggered } from "react-icons/fa6";
 import SocialLogin from "../components/shared/SocialLogin";
+import SignOut from "../components/shared/SignOut";
 
 const Dashboard = () => {
     const [open, setOpen] = useState(true);
@@ -16,6 +17,7 @@ const Dashboard = () => {
                     Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est deserunt perferendis, inventore sit voluptatum numquam obcaecati, qui cupiditate nesciunt ipsa dignissimos rem fugit itaque, asperiores exercitationem possimus. Quasi inventore velit, fuga et amet accusamus possimus? Sed dolorem totam ab, dolores omnis natus. Maxime rerum corrupti eos repellendus cupiditate quia perferendis quas amet ex ad. Ex quae quo earum deleniti rem nobis, quis maxime quas? Quidem natus aspernatur similique pariatur neque veritatis laboriosam, tenetur expedita iste at itaque ducimus vel? Ipsum, doloremque aliquid tempore obcaecati blanditiis libero deleniti repudiandae corporis rerum aut hic necessitatibus, possimus perferendis, excepturi delectus iure. Animi, beatae.
                 </div>
                 <SocialLogin />
+                <SignOut />
             </div>
         </section>
     );
