@@ -3,7 +3,6 @@ import Main from "../layouts/Main";
 import Dashboard from "../pages/Dashboard";
 import Home from "../pages/Home";
 import PrivateRoute from "./PrivateRoute";
-import WorkSpace from "../components/dashboard/WorkSpace";
 import DashboardHome from "../components/dashboard/DashboardHome";
 import Profile from "../components/dashboard/Profile";
 const Router = createBrowserRouter([
@@ -22,10 +21,6 @@ const Router = createBrowserRouter([
           {
             path: "/dashboard",
             element: <PrivateRoute><DashboardHome /></PrivateRoute>
-          },
-          {
-            path: "/dashboard/workspace",
-            element: <PrivateRoute><WorkSpace /></PrivateRoute>
           },
           {
             path: "/dashboard/profile",

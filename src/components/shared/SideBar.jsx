@@ -9,9 +9,8 @@ import SignOut from "./SignOut";
 
 const SideBar = ({open, setOpen}) => {
     const menus = [
-        { name: "Dashboard", link: "/dashboard", icon: MdOutlineDashboard },
         { name: "Profile", link: "/dashboard/profile", icon: AiOutlineUser },
-        { name: "Workspace", link: "/dashboard/workspace", icon: FiFolder }
+        { name: "Dashboard", link: "/dashboard", icon: MdOutlineDashboard },
     ];
     
     return (

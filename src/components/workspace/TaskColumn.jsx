@@ -4,7 +4,7 @@ import TaskCard from './TaskCard';
 
 const TaskColumn = ({ heading, tasks, status, background }) => {
     return (
-        <div className={`w-full ${background} p-4 rounded-lg border border-gray-500`}>
+        <div className={`w-full ${background} p-4 rounded-lg border border-gray-200`}>
             <h2 className="text-lg font-bold text-center">{heading}</h2>
             <div className='flex flex-col gap-4 mt-3'>
                 {tasks.map((task, index) => {
