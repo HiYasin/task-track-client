@@ -3,6 +3,8 @@ import TaskColumn from './TaskColumn';
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import AddTask from './AddTask';
+import { closestCorners, DndContext } from '@dnd-kit/core';
+import { arrayMove } from '@dnd-kit/sortable';
 
 
 const taskList = [
@@ -18,7 +20,7 @@ const taskList = [
         "title": "Setup Firebase",
         "description": "Configure Firebase Firestore for real-time data storage.",
         "timestamp": "2025-02-21T12:30:00Z",
-        "category": "In Progress"
+        "category": "In-Progress"
     },
     {
         "id": 3,
@@ -39,7 +41,7 @@ const taskList = [
         "title": "Optimize performance",
         "description": "Improve application load time and reduce API response delays.",
         "timestamp": "2025-02-22T09:30:00Z",
-        "category": "In Progress"
+        "category": "In-Progress"
     },
     {
         "id": 6,
@@ -53,7 +55,7 @@ const taskList = [
         "title": "Fix authentication bug",
         "description": "Resolve login session expiration issue in Firebase authentication.",
         "timestamp": "2025-02-22T13:20:00Z",
-        "category": "In Progress"
+        "category": "In-Progress"
     },
     {
         "id": 8,
@@ -78,9 +80,55 @@ const taskList = [
     }
 ]
 const DashboardHome = () => {
+    const getTasks = localStorage.getItem('tasks');
+    const savedTasks = JSON.parse(getTasks) || taskList;
+
+    const [tasks, setTasks] = useState(savedTasks);
+
+    const getTaskPos = (id) => tasks.findIndex((task) => task.id === id);
+    const getCategory = (id) => tasks.filter((task) => task.id === id)[0].category;
+
+    const handleDragEnd = ({ active, over }) => {
+        // if (!over) return;
+
+        if (active.id !== over.id) {
+            setTasks(tasks => {
+                const orginalPos = getTaskPos(active.id);
+                let newPos = getTaskPos(over.id);
+                //console.log(orginalPos, newPos);
+
+                let newCategory;
+                if (typeof over.id !== 'string') {
+                    newCategory = getCategory(over.id);
+                }
+                else {
+                    newCategory = over.id;
+                    newPos = 1;
+                }
+                //console.log(newCategory)
+
+                //console.log(active.id, over.id, newCategory);
+                const updatedTasks = arrayMove(tasks, orginalPos, newPos).map((task, index) => ({
+                    ...task,
+                    category: index === newPos ? newCategory : task.category
+                }));
+
+                localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+                return updatedTasks;
+
+                // return arrayMove(tasks, orginalPos, newPos);
+            })
+        }
+        return tasks;
+    };
+    const categories = [
+        { id: 'To-Do', title: "To-Do" },
+        { id: 'In-Progress', title: "In-Progress" },
+        { id: 'Done', title: "Done" },
+    ];
     const [isOpen, setOpen] = useState(false);
     return (
-        <div className='h-screen'>
+        <div className='h-full'>
             <Helmet>
                 <title>Task Track | Dashboard</title>
             </Helmet>
@@ -93,29 +141,22 @@ const DashboardHome = () => {
                 <FaPlus></FaPlus> Add New Task
             </button>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 w-full gap-1 md:gap-3 lg:gap-5 pt-5">
-                <TaskColumn
-                    heading="To do"
-                    status="To-Do"
-                    background="bg-red-100"
-                    tasks={taskList}
-                />
-                <TaskColumn
-                    heading="In Progress"
-                    status="In Progress"
-                    background="bg-yellow-100"
-                    tasks={taskList}
-                />
-                <TaskColumn
-                    heading="Done"
-                    status="Done"
-                    background="bg-green-100"
-                    tasks={taskList}
-                />
-            </div>
+            <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 w-full gap-1 md:gap-3 lg:gap-5 pt-5">
+                    {
+                        categories.map((column) => (
+                            <TaskColumn
+                                key={column.id}
+                                column={column}
+                                tasks={tasks.filter((task) => task.category === column.id)}
+                            />
+                        ))
+                    }
+                </div>
+            </DndContext>
             {isOpen && (
                 <div className="fixed top-0 bg-gray-900/50 duration-300 left-0 w-full h-full shadow-2xl flex justify-center items-center z-50">
-                    <AddTask setOpen={setOpen}/>
+                    <AddTask setOpen={setOpen} />
                 </div>
             )}
         </div>

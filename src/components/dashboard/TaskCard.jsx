@@ -1,10 +1,25 @@
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
-import DropArea from './DropArea';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const TaskCard = ({ task }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: task.id });
+
+    const style = {
+        // transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        transition,
+        transform: CSS.Transform.toString(transform),
+    };
+
     return (
         <>
-            <div className='p-4 bg-white rounded-lg space-y-1 shadow-md' draggable='true'>
+            <div
+                key={task.id}
+                ref={setNodeRef}
+                style={style}
+                {...attributes}
+                {...listeners}
+                className='p-4 bg-white border border-gray-300 rounded-lg space-y-1 shadow-md cursor-move'>
                 <p className='font-semibold'>{task.title}</p>
                 <p className='text-xs font-semibold text-black bg-gray-300 w-fit rounded-full px-3 py-0.5'>{new Date(task.timestamp).toLocaleString()}</p>
                 <p className='text-base text-gray-500 font-normal'>{task.description}</p>
@@ -17,7 +32,6 @@ const TaskCard = ({ task }) => {
                     </button>
                 </div>
             </div>
-            <DropArea />
         </>
     );
 };
