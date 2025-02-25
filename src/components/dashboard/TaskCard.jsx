@@ -4,35 +4,18 @@ import { CSS } from '@dnd-kit/utilities';
 import useData from '../../customHooks/useData';
 import useAxios from '../../customHooks/useAxios';
 import Swal from 'sweetalert2';
-import { useEffect, useState } from 'react';
-
+import useAuth from '../../customHooks/useAuth';
 const TaskCard = ({ task }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: task.id });
 
-    const { userdata, refetch } = useData();
+    const { user } = useAuth();
+    const { userdata, refetch, tasks, setTasks } = useData();
     const axiosPublic = useAxios();
 
     const style = {
         transition,
         transform: CSS.Transform.toString(transform),
     };
-
-    const [tasks, setTasks] = useState(userdata.tasks);
-
-    useEffect(() => {
-        if (tasks.length >= 0) {
-            const updateTasks = async () => {
-                try {
-                    const response = await axiosPublic.patch(`/update-tasks/${userdata.email}`, { tasks });
-                    console.log('Tasks updated successfully:', response.data);
-                    refetch();
-                } catch (error) {
-                    console.error('Error updating tasks:', error);
-                }
-            };
-            updateTasks();
-        }
-    }, [tasks]);
 
     const handleDelete = () => {
         const updatedTasks = tasks.filter((t) => t.id !== task.id);

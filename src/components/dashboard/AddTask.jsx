@@ -33,6 +33,7 @@ const AddTask = ({ setOpen }) => {
         try {
             const response = await axiosPublic.patch(`/add-task/${user.email}`, { task: taskDetails });
             //console.log('Task added successfully:', response.data);
+            refetch();
         } catch (error) {
             console.error('Error config:', error.config);
         }

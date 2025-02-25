@@ -1,24 +1,29 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import useAuth from './useAuth';
 import useAxios from './useAxios';
-import { useEffect, useState } from 'react';
 
 const useData = () => {
-    const { user, loading } = useAuth();
+    const { user } = useAuth();
     const axiosPublic = useAxios();
-    
+
     const { data: userdata = {}, refetch } = useQuery({
-        queryKey: ["user", user.email],
+        queryKey: ["user", user?.email],
         queryFn: async () => {
-            const res = await axiosPublic.get(`/users/${user.email}`);
-            return res.data;
-        }
+            if (!user?.email) {
+                return {};
+            }
+            try {
+                const res = await axiosPublic.get(`/users/${user.email}`);
+                //console.log('User data fetched:', res.data);
+                return res.data;
+            } catch (error) {
+                //console.error('Error fetching user data:', error);
+                return {};
+            }
+        },
+        enabled: !!user?.email, // Only run the query if the user email is available
     });
-
-    const [tasks, setTasks] = useState([]);
-
-    return { userdata, refetch , tasks, setTasks };
+    return { userdata, refetch };
 };
 
 export default useData;
