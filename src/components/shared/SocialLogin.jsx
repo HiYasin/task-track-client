@@ -13,9 +13,11 @@ const SocialLogin = () => {
         googleSign()
             .then((res) => {
                 Swal.fire({
-                    icon: "scuccess",
                     title: "Success",
                     text: "Register & Login Successfully!",
+                    icon: "success",
+                    iconColor: "#0e0e0e",
+                    confirmButtonColor: "#0e0e0e" // Set the button color to black
                 });
                 navigate(redirectTo, { replace: true });
             })

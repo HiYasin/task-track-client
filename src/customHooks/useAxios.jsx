@@ -1,13 +1,11 @@
 import axios from 'axios';
-import useAxiosSecure from './useAxiosSecure';
 const axiosPublic = axios.create({
-    base_URL: 'https://staff-sync-server.vercel.app',
+    baseURL: 'https://task-track-server-plum.vercel.app',
     withCredentials: true,
 });
 
 const useAxios = () => {
-    const axiosSecure = useAxiosSecure();
-    return [axiosSecure, axiosPublic];
+    return axiosPublic;
 };
 
 export default useAxios;

@@ -1,132 +1,92 @@
 import { Helmet } from 'react-helmet-async';
 import TaskColumn from './TaskColumn';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import AddTask from './AddTask';
-import { closestCorners, DndContext } from '@dnd-kit/core';
+import { closestCorners, DndContext, MouseSensor, TouchSensor, useSensor } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
+import useData from '../../customHooks/useData';
+import axios from 'axios';
+import useAxios from '../../customHooks/useAxios';
 
-
-const taskList = [
-    {
-        "id": 1,
-        "title": "Design UI layout",
-        "description": "Create wireframes and UI components for the dashboard.",
-        "timestamp": "2025-02-21T10:00:00Z",
-        "category": "To-Do"
-    },
-    {
-        "id": 2,
-        "title": "Setup Firebase",
-        "description": "Configure Firebase Firestore for real-time data storage.",
-        "timestamp": "2025-02-21T12:30:00Z",
-        "category": "In-Progress"
-    },
-    {
-        "id": 3,
-        "title": "Implement drag-and-drop",
-        "description": "Enable drag-and-drop functionality for task movement.",
-        "timestamp": "2025-02-20T14:15:00Z",
-        "category": "Done"
-    },
-    {
-        "id": 4,
-        "title": "Create API endpoints",
-        "description": "Develop RESTful API endpoints for task management.",
-        "timestamp": "2025-02-21T15:45:00Z",
-        "category": "To-Do"
-    },
-    {
-        "id": 5,
-        "title": "Optimize performance",
-        "description": "Improve application load time and reduce API response delays.",
-        "timestamp": "2025-02-22T09:30:00Z",
-        "category": "In-Progress"
-    },
-    {
-        "id": 6,
-        "title": "Write unit tests",
-        "description": "Create Jest test cases for core functionalities.",
-        "timestamp": "2025-02-22T11:00:00Z",
-        "category": "To-Do"
-    },
-    {
-        "id": 7,
-        "title": "Fix authentication bug",
-        "description": "Resolve login session expiration issue in Firebase authentication.",
-        "timestamp": "2025-02-22T13:20:00Z",
-        "category": "In-Progress"
-    },
-    {
-        "id": 8,
-        "title": "Deploy application",
-        "description": "Deploy the project to Vercel and test live functionality.",
-        "timestamp": "2025-02-23T10:00:00Z",
-        "category": "To-Do"
-    },
-    {
-        "id": 9,
-        "title": "Refactor codebase",
-        "description": "Improve code readability and maintainability.",
-        "timestamp": "2025-02-23T14:45:00Z",
-        "category": "Done"
-    },
-    {
-        "id": 10,
-        "title": "Update documentation",
-        "description": "Ensure README and API documentation are up to date.",
-        "timestamp": "2025-02-23T16:30:00Z",
-        "category": "Done"
-    }
-]
 const DashboardHome = () => {
-    const getTasks = localStorage.getItem('tasks');
-    const savedTasks = JSON.parse(getTasks) || taskList;
+    const { userdata, refetch } = useData();
+    const axiosPublic = useAxios();
+    console.log(userdata);
 
-    const [tasks, setTasks] = useState(savedTasks);
+    const [tasks, setTasks] = useState([]);
+    useEffect(() => {
+        if (userdata && userdata.tasks) {
+            setTasks(userdata.tasks);
+        }
+    }, []);
+
+
+    const [ trigger, setTrigger ] = useState(false);
+    
+
+    useEffect(() => {
+        if (tasks.length >= 0) {
+            // Call the API to update tasks
+            const updateTasks = async () => {
+                try {
+                    const response = await axiosPublic.patch(`/update-tasks/${userdata.email}`, { tasks });
+                    //console.log('Tasks updated successfully:', response.data);
+                } catch (error) {
+                    console.error('Error updating tasks:', error);
+                }
+            };
+            updateTasks();
+            refetch();
+        }
+    }, [tasks]);
 
     const getTaskPos = (id) => tasks.findIndex((task) => task.id === id);
     const getCategory = (id) => tasks.filter((task) => task.id === id)[0].category;
 
     const handleDragEnd = ({ active, over }) => {
-        // if (!over) return;
+        if (!over) return;
 
         if (active.id !== over.id) {
-            setTasks(tasks => {
-                const orginalPos = getTaskPos(active.id);
-                let newPos = getTaskPos(over.id);
-                //console.log(orginalPos, newPos);
-
+            setTasks((tasks) => {
+                const originalPos = getTaskPos(active.id);
+                let newPos;
                 let newCategory;
                 if (typeof over.id !== 'string') {
                     newCategory = getCategory(over.id);
-                }
-                else {
+                    newPos = getTaskPos(over.id);
+                } else {
                     newCategory = over.id;
                     newPos = 1;
                 }
-                //console.log(newCategory)
 
-                //console.log(active.id, over.id, newCategory);
-                const updatedTasks = arrayMove(tasks, orginalPos, newPos).map((task, index) => ({
+                const updatedTasks = arrayMove(tasks, originalPos, newPos).map((task, index) => ({
                     ...task,
-                    category: index === newPos ? newCategory : task.category
+                    // category: index === newPos ? newCategory : task.category
+                    category: newCategory
                 }));
-
-                localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+                //console.log(updatedTasks);
+                // setDragged(!dragged);
                 return updatedTasks;
-
-                // return arrayMove(tasks, orginalPos, newPos);
-            })
+            });
         }
-        return tasks;
     };
+
+    const mouseSensor = useSensor(MouseSensor, {
+        // Require the mouse to move by 10 pixels before activating
+        activationConstraint: {
+            distance: 10,
+        },
+    });
+
     const categories = [
         { id: 'To-Do', title: "To-Do" },
         { id: 'In-Progress', title: "In-Progress" },
         { id: 'Done', title: "Done" },
     ];
+
     const [isOpen, setOpen] = useState(false);
+
     return (
         <div className='h-full'>
             <Helmet>
@@ -141,7 +101,7 @@ const DashboardHome = () => {
                 <FaPlus></FaPlus> Add New Task
             </button>
 
-            <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
+            <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners} sensors={[mouseSensor]}>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 w-full gap-1 md:gap-3 lg:gap-5 pt-5">
                     {
                         categories.map((column) => (

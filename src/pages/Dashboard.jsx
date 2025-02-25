@@ -2,12 +2,10 @@ import { useState } from "react";
 import SideBar from "../components/shared/SideBar";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { Outlet } from "react-router-dom";
-import useTask from "../customHooks/useTask";
 
 const Dashboard = () => {
-    const {tasks} = useTask();
-    console.log(tasks);
-    const [open, setOpen] = useState(true);
+    //console.log(tasks);
+    const [open, setOpen] = useState(false);
     return (
         <section className="flex gap-6">
             <SideBar open={open} setOpen={setOpen} />
