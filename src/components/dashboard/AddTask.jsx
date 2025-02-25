@@ -14,16 +14,16 @@ const AddTask = ({ setOpen }) => {
     const generateId = () => {
         // Generate a unique ID
         const timestamp = new Date().getTime();
-        const randomNum = Math.floor(Math.random() * 1000000);
-        return timestamp.toString() + randomNum.toString();
+        const randomNum = Math.floor(Math.random() * 1000);
+        return parseInt(timestamp.toString() + randomNum.toString());
         // return timestamp.toString(36) + Math.random().toString(36).substr(2);
     }
 
     const handleAddTask = async (e) => {
         e.preventDefault();
         const taskDetails = {
-            id: userdata.tasks.length+1,
-            // id: generateId(new Date().toLocaleString()),
+            // id: userdata.tasks.length+1,
+            id: generateId(new Date().toLocaleString()),
             title: e.target.title.value,
             description: e.target.description.value,
             time: new Date().toLocaleString(), // Current date and time
@@ -33,19 +33,24 @@ const AddTask = ({ setOpen }) => {
         try {
             const response = await axiosPublic.patch(`/add-task/${user.email}`, { task: taskDetails });
             //console.log('Task added successfully:', response.data);
-            refetch();
+            e.target.reset();
+            Swal.fire({
+                title: "Good job!",
+                text: "New task item added successfully.",
+                icon: "success",
+                confirmButtonColor: "#0e0e0e" // Set the button color to black
+            });
         } catch (error) {
-            console.error('Error config:', error.config);
+            // console.error('Error config:', error.config);
+            Swal.fire({
+                title: "Ops!",
+                text: "New task item adding failed.",
+                icon: "error",
+                confirmButtonColor: "#0e0e0e" // Set the button color to black
+            });
         }
 
         refetch(); // Refetch data to reflect the new task in the list
-        e.target.reset();
-        Swal.fire({
-            title: "Good job!",
-            text: "New task item added successfully.",
-            icon: "success",
-            confirmButtonColor: "#0e0e0e" // Set the button color to black
-        });
         setOpen(false);
     };
 
