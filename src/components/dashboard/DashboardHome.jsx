@@ -3,8 +3,8 @@ import TaskColumn from './TaskColumn';
 import { useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import AddTask from './AddTask';
-import { closestCorners, DndContext, MouseSensor, useSensor } from '@dnd-kit/core';
-import { arrayMove } from '@dnd-kit/sortable';
+import { closestCorners, DndContext, KeyboardCode, KeyboardSensor, MouseSensor, PointerSensor, TouchSensor, useSensor } from '@dnd-kit/core';
+import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import useAxios from '../../customHooks/useAxios';
 import Spinner from '../shared/Spinner';
 import useData from '../../customHooks/useData';
@@ -145,6 +145,14 @@ const DashboardHome = () => {
         },
     });
 
+    const touchSensor = useSensor(TouchSensor, {
+        // Require the touch to move by 10 pixels before activating
+        activationConstraint: {
+            distance: 10,
+        },
+    });
+
+
     //columns
     const categories = [
         { id: 'To-Do', title: "To-Do" },
@@ -165,7 +173,7 @@ const DashboardHome = () => {
                             <title>Task Track | Dashboard</title>
                         </Helmet>
 
-                        <h1 className='text-4xl font-semibold text-center'>Dashboard {tasks.length}</h1>
+                        <h1 className='text-4xl font-semibold text-center'>Dashboard</h1>
 
                         {/* Add new task button */}
                         <button
@@ -175,7 +183,7 @@ const DashboardHome = () => {
                         </button>
                         
                         {/* Drag and Drop sortable tasks */}
-                        <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners} sensors={[mouseSensor]}>
+                        <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners} sensors={[mouseSensor, touchSensor]}>
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 w-full gap-1 md:gap-3 lg:gap-5 pt-5">
                                 {
                                     categories.map((column) => (

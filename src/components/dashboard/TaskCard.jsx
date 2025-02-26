@@ -122,7 +122,7 @@ const TaskCard = ({ task }) => {
                 style={style}
                 {...attributes}
                 {...listeners}
-                className='p-4 bg-white border border-gray-300 rounded-lg space-y-1 shadow-md cursor-move'>
+                className='p-4 bg-white border border-gray-300 rounded-lg space-y-1 shadow-md cursor-move touch-none'>
 
                 {/* Task Details */}
                 <p className='font-semibold'>{task.title}</p>
